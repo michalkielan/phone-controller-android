@@ -3,7 +3,6 @@ package com.example.michal.phonecontroller;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
@@ -18,7 +17,7 @@ import android.telephony.SmsMessage;
 /**
  * @brief Object for sms send/received
  */
-public class Sms extends BroadcastReceiver implements DataSender
+public class Sms extends BroadcastReceiver implements TransmitterReceiver
 {
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
 

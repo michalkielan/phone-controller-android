@@ -2,18 +2,24 @@ package com.example.michal.phonecontroller;
 
 
 /**
- * Created by Michal on 4/3/18.
+ * Created by Michal Kielan on 4/4/18.
  */
 
+public class DataSender
+{
+    Crypt mCrypt;
+    TransmitterReceiver mTransmitterReceiver;
 
-/**
- * @brief DataSender interface for send and receive messages from io controller
- */
-public interface DataSender {
+    DataSender(Crypt crypt, TransmitterReceiver transmitterReceiver)
+    {
+        mCrypt = crypt;
+        mTransmitterReceiver = transmitterReceiver;
+    }
 
-    /**
-     * @brief Send data
-     * @param inputFrame array of bytes to send
-     */
-    void send(byte[] inputFrame);
+    public void send(FrameMessage frameMessage)
+    {
+        final byte[] buf = frameMessage.getBuffer();
+        mTransmitterReceiver.send(mCrypt.encrypt(buf));
+    }
+
 }

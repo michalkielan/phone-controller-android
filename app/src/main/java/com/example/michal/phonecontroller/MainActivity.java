@@ -3,6 +3,7 @@ package com.example.michal.phonecontroller;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+
 public class MainActivity extends AppCompatActivity
 {
 
@@ -14,6 +15,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dataSender = new Sms();
+        FrameMessage fm = new FrameMessage();
+
+        dataSender = new DataSender(new CryptXor(Key64.key64), new Sms());
+        dataSender.send(fm);
+
     }
 }

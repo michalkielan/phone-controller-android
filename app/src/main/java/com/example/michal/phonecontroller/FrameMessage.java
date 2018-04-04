@@ -1,5 +1,9 @@
 package com.example.michal.phonecontroller;
 
+import android.view.animation.Interpolator;
+
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
 import java.util.Vector;
 
 /**
@@ -50,19 +54,62 @@ public class FrameMessage {
         mData = new byte[2];
     }
 
-    public Vector<Byte> toBuffer()
+    public void setCommand(int command)
     {
-        Vector<Byte> buff = new Vector();
-        buff.add(mStart[0]);
-        buff.add(mStart[1]);
-        buff.add(mDevice[0]);
-        buff.add(mDevice[1]);
-        buff.add(mCommand[0]);
-        buff.add(mCommand[1]);
-        buff.add(mData[0]);
-        buff.add(mData[1]);
-        buff.add(mCrc);
+        final int lowByte = 3, highByte = 2;
+        final byte[] buf = ByteBuffer.allocate(4).putInt(command).array();
+        mCommand[0] = buf[highByte];
+        mCommand[1] = buf[lowByte];
+    }
 
-        return buff;
+    public void setDevice(int device)
+    {
+        final int lowByte = 3, highByte = 2;
+        final byte[] buf = ByteBuffer.allocate(4).putInt(device).array();
+        mDevice[0] = buf[highByte];
+        mDevice[1] = buf[lowByte];
+    }
+
+    public void setData(int data)
+    {
+        final int lowByte = 3, highByte = 2;
+        final byte[] buf = ByteBuffer.allocate(4).putInt(data).array();
+        mData[0] = buf[highByte];
+        mData[1] = buf[lowByte];
+    }
+
+    private byte getCrc(Vector<Byte> buff)
+    {
+        byte crc = 0;
+        for(int i=0; i<buff.size(); i++)
+        {
+            crc ^= buff.get(i);
+        }
+        return crc;
+    }
+
+    public byte[] getBuffer()
+    {
+        Vector<Byte> v = new Vector();
+        v.add(mStart[0]);
+        v.add(mStart[1]);
+        v.add(mDevice[0]);
+        v.add(mDevice[1]);
+        v.add(mCommand[0]);
+        v.add(mCommand[1]);
+        v.add(mData[0]);
+        v.add(mData[1]);
+
+        mCrc = getCrc(v);
+        v.add(mCrc);
+
+        byte[] bytes = new byte[v.size()];
+
+        for (int i = 0; i < v.size(); i++)
+        {
+            bytes[i] = v.get(i);
+        }
+
+        return bytes;
     }
 }
